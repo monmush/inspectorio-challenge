@@ -1,4 +1,4 @@
-import { Button, Space, Typography } from "antd";
+import { Button, Row, Space, Typography } from "antd";
 import React, { useState } from "react";
 import Layout from "../components/Layout";
 
@@ -34,7 +34,9 @@ const Home: React.FC = () => {
         <Typography.Text>
           Tap the username to see more information
         </Typography.Text>
-        <Space>{TOP_5_USERS.map(renderUsers)}</Space>
+        <Row style={{ width: "100%", gap: 8 }}>
+          {TOP_5_USERS.map(renderUsers)}
+        </Row>
       </Space>
     </Layout>
   );
