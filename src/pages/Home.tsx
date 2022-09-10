@@ -1,6 +1,10 @@
-import { Button, Row, Space, Typography } from "antd";
-import React, { useState } from "react";
+import { Button, Drawer, message, Row, Space, Typography } from "antd";
+import { AxiosError } from "axios";
+import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
+import Person, { TUser } from "../components/User";
+import { axiosClient } from "../services/axios";
+import { Endpoint } from "../services/endpoint";
 
 const TOP_5_USERS = [
   "GrahamCampbell",
@@ -15,17 +19,49 @@ const Home: React.FC = () => {
     string | undefined
   >();
 
-  const renderUsers = (username: string) => {
-    return (
-      <Button
-        key={username}
-        type="primary"
-        onClick={() => setSelectedUsername(username)}
-      >
-        {username}
-      </Button>
-    );
+  const [user, setUser] = useState<TUser>();
+  const [loading, setLoading] = useState(false);
+
+  const fetchUser = async (username: string) => {
+    setLoading(true);
+    try {
+      const endpoint = `${Endpoint.Users}/${username}`;
+      const res = await axiosClient.get(endpoint);
+      return res.data;
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      if (axiosError.response) {
+        message.error(JSON.stringify(axiosError.response.data));
+      } else {
+        message.error("Something when wrong");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
+
+  useEffect(() => {
+    // Prevent redundant re-fetch when toggle on one user continously
+    const isDifferentUser = selectedUsername !== user?.login;
+
+    if (selectedUsername && isDifferentUser) {
+      fetchUser(selectedUsername).then((user) => {
+        setUser(user);
+      });
+    }
+  }, [selectedUsername]);
+
+  const renderUsers = (username: string) => (
+    <Button
+      key={username}
+      type="primary"
+      onClick={() => setSelectedUsername(username)}
+    >
+      {username}
+    </Button>
+  );
+
+  const closeModal = () => setSelectedUsername(undefined);
 
   return (
     <Layout title="Home">
@@ -38,6 +74,17 @@ const Home: React.FC = () => {
           {TOP_5_USERS.map(renderUsers)}
         </Row>
       </Space>
+      <Drawer
+        width="100vw"
+        destroyOnClose
+        className="person-modal"
+        visible={!!selectedUsername}
+        onClose={closeModal}
+      >
+        <Layout title="Person" onBack={closeModal}>
+          <Person user={user} loading={loading} />
+        </Layout>
+      </Drawer>
     </Layout>
   );
 };
