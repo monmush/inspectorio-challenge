@@ -6,6 +6,7 @@
   align-items: center;
   justify-items: center;
   flex-direction: row;
+  padding: 0 24px;
 }
 
 .layout-back {
@@ -20,6 +21,11 @@
 .layout-title {
   margin: 0 auto !important;
   color: #fff !important;
+}
+
+.layout-placeholder {
+  width: 54px;
+  height: 100%;
 }
 
 .layout-content {
