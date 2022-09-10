@@ -1,6 +1,6 @@
 import { Button, Drawer, message, Row, Space, Typography } from "antd";
 import { AxiosError } from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Layout from "../components/Layout";
 import Person, { TUser } from "../components/User";
 import { axiosClient } from "../services/axios";
@@ -15,12 +15,9 @@ const TOP_5_USERS = [
 ];
 
 const Home: React.FC = () => {
-  const [selectedUsername, setSelectedUsername] = useState<
-    string | undefined
-  >();
-
   const [user, setUser] = useState<TUser>();
   const [loading, setLoading] = useState(false);
+  const [selectedUsername, setSelectedUsername] = useState<string>();
 
   const fetchUser = async (username: string) => {
     setLoading(true);
@@ -40,22 +37,22 @@ const Home: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    // Prevent redundant re-fetch when toggle on one user continously
-    const isDifferentUser = selectedUsername !== user?.login;
+  const clickUserButton = async (username: string) => {
+    setSelectedUsername(username);
 
-    if (selectedUsername && isDifferentUser) {
-      fetchUser(selectedUsername).then((user) => {
-        setUser(user);
-      });
+    const isDifferentUser = username !== user?.login;
+
+    if (isDifferentUser) {
+      const newUser = await fetchUser(username);
+      setUser(newUser);
     }
-  }, [selectedUsername]);
+  };
 
   const renderUsers = (username: string) => (
     <Button
       key={username}
       type="primary"
-      onClick={() => setSelectedUsername(username)}
+      onClick={() => clickUserButton(username)}
     >
       {username}
     </Button>
