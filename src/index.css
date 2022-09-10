@@ -1,1 +1,24 @@
 @import "antd/dist/antd.css";
+
+.layout-header {
+  background-color: #221e24;
+  display: flex;
+  align-items: center;
+  justify-items: center;
+  flex-direction: row;
+}
+
+.layout-back {
+  color: #fff;
+  padding: 0;
+}
+
+.layout-title {
+  margin: 0 auto !important;
+  color: #fff !important;
+}
+
+.layout-content {
+  padding: 16px 24px;
+  background-color: #fff;
+}

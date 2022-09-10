@@ -1,5 +1,6 @@
 import { Button, Space, Typography } from "antd";
 import React, { useState } from "react";
+import Layout from "../components/Layout";
 
 const TOP_5_USERS = [
   "GrahamCampbell",
@@ -27,13 +28,15 @@ const Home: React.FC = () => {
   };
 
   return (
-    <Space direction="vertical">
-      <Typography.Title level={3}>Top 5 Github Users</Typography.Title>
-      <Typography.Text>
-        Tap the username to see more information
-      </Typography.Text>
-      <Space>{TOP_5_USERS.map(renderUsers)}</Space>
-    </Space>
+    <Layout title="Home">
+      <Space direction="vertical">
+        <Typography.Title level={3}>Top 5 Github Users</Typography.Title>
+        <Typography.Text>
+          Tap the username to see more information
+        </Typography.Text>
+        <Space>{TOP_5_USERS.map(renderUsers)}</Space>
+      </Space>
+    </Layout>
   );
 };
 
